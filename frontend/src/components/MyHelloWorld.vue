@@ -1,10 +1,19 @@
 <template>
   <div style="display: flex; align-items: center; margin-top: 60px;">
-    <p style="margin-left: 100px;margin-right: 10px">代理:</p>
-    <el-input style="width: 400px;height: 30px;margin-right: 20px" v-model="proxy" placeholder="Please input" />
+    <p style="margin-left: 100px;width: 60px;">主机:</p>
+    <el-input style="width: 400px;height: 30px;margin-right: 20px;" v-model="telnetInput" placeholder="host:port" />
+    <p style="width: 145px;" :class="{ 'red-text': telnetResult === '超时', 'green-text': telnetResult !== '超时' }">{{ telnetResult }}</p>
+    <el-button @click="telnet" :loading="telnetLoading">测试</el-button>
+  </div>
+
+  <el-divider />
+
+  <div style="display: flex; align-items: center;">
+    <p style="margin-left: 100px;width: 60px;">代理:</p>
+    <el-input style="width: 400px;height: 30px;margin-right: 20px" v-model="proxy" placeholder="http://user:pass@host:port" />
 
     <p style="margin-right: 10px">超时(s):</p>
-    <el-input style="width: 60px;margin-right: 20px" v-model="timeout" placeholder="" />
+    <el-input style="width: 60px;margin-right: 20px" v-model="timeout" />
 
     <el-button @click="submit" :loading="loading">测试</el-button>
   </div>
@@ -36,6 +45,22 @@
 <script setup>
 import { ref } from 'vue'
 import { TestNetwork } from '../../wailsjs/go/main/App'
+import { TestPort } from '../../wailsjs/go/main/App'
+
+
+const telnetLoading = ref(false)
+const telnetInput = ref('')
+const telnetResult = ref('0')
+
+const telnet = async () => {
+  telnetLoading.value = true;
+  await TestPort(telnetInput.value, Number(timeout.value)).then(result => {
+    telnetResult.value = result;
+  })
+  telnetLoading.value = false;
+}
+
+//////
 
 const loading = ref(false)
 
@@ -54,9 +79,7 @@ const timeout = ref(3)
 
 const submit = async () => {
   loading.value = true;
-  console.log("hello");
-  console.log(proxy.value);
-  await TestNetwork([input0.value,input1.value, input2.value, input3.value], proxy.value, Number(timeout.value)).then(result => {
+  await TestNetwork([input0.value, input1.value, input2.value, input3.value], proxy.value, Number(timeout.value)).then(result => {
     result.forEach(function (item) {
       switch (item[0]) {
         case '0':

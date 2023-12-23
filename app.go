@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"sync"
@@ -29,6 +30,16 @@ func (a *App) startup(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+func (a *App) TestPort(address string, timeout int) string {
+	start := time.Now()
+	c, err := net.DialTimeout("tcp", address, time.Duration(timeout)*time.Second)
+	if err != nil {
+		return "超时"
+	}
+	c.Close()
+	return time.Since(start).String()
 }
 
 func (a *App) TestNetwork(urls []string, proxy string, timeout int) [][2]string {

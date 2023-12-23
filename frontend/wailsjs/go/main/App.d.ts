@@ -4,3 +4,5 @@
 export function Greet(arg1:string):Promise<string>;
 
 export function TestNetwork(arg1:Array<string>,arg2:string,arg3:number):Promise<Array<any>>;
+
+export function TestPort(arg1:string,arg2:number):Promise<string>;

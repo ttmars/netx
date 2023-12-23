@@ -9,3 +9,7 @@ export function Greet(arg1) {
 export function TestNetwork(arg1, arg2, arg3) {
   return window['go']['main']['App']['TestNetwork'](arg1, arg2, arg3);
 }
+
+export function TestPort(arg1, arg2) {
+  return window['go']['main']['App']['TestPort'](arg1, arg2);
+}
