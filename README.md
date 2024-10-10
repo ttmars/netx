@@ -1,4 +1,4 @@
-wails脚手架
+网络测试工具
 
 wails初始化
 wails init -n myproject -t vue
